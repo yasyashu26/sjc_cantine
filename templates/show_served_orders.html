@@ -1,0 +1,49 @@
+{% extends 'order_base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% endblock%}
+
+{% block title %}
+ All served Orders
+{% endblock title %}
+
+
+{% block content %}
+{% if total_order %}
+<h1 align="center">ALL SERVED ORDERS</h1><br>
+
+
+<table class="table" color="blue">
+    <thead class="thead-inverse">
+      <tr>
+          <th >#</th>
+          <th >Product Name</th>
+          <th >Total Items</th>       
+        </tr>
+      </thead>
+      <div class="height">
+      <tbody>
+        
+  
+        {% for order in total_order %}
+        <tr>
+          <th>{{ forloop.counter }}</th>
+          <td>{{order.item}}</td>
+          <td> {{order.total_items}}</td>
+ 
+          
+        </tr>
+      {% endfor %}
+        </tbody>
+      </table>
+
+{% else %}
+<br><br>
+<h1 align="center">You donot have Any  orders for the Day. RELAX!!!</h1>
+{% endif %}
+    </div>
+
+
+{% endblock %}

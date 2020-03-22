@@ -1,0 +1,18 @@
+.navbar-brand {
+    font-family: 'Peralta', cursive;
+  }
+
+.description h1{
+  color: black;
+}
+.description p{
+ color:#666;
+ font-size: 20px;
+
+ line-height: 1.5; 
+}
+
+.nav-link{
+  color: white;
+}
+

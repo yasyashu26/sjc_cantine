@@ -1,0 +1,124 @@
+{% extends 'base.html' %} 
+{% block title%} Your Cart {% endblock%}
+{% block content %}
+<div class="my-5">
+	
+</div>
+<div class="container">
+  <h2>Your Cart</h2><br>
+
+  <div class="table-responsive">
+    <table  class="table table-hover">
+      <thead>
+        <tr>
+          <th >#</th>
+          <th >Product Name</th>
+          <th >Quantity</th>
+          <th >Unit(₹)</th>
+          <th >Price(₹)</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+  
+        {% for cart in carts %}
+        <tr>
+          <th scope="row" >{{ forloop.counter }}</th>
+          <td id="item-name">{{ cart.item.name }}</td>
+          <td id="item-quantity">
+            <a  href="{% url 'decrease-cart' cart.item.pk %}"><span class="badge badge-light"><i class="fa fa-minus"></i></span></a>
+          {{ cart.quantity }}
+            <a  href="{% url 'add-cart' cart.item.pk %}"><span class="badge badge-light"><i class="fa fa-plus"></i></span></a>
+    
+          </td>
+          <td id="item-price">{{cart.item.price}}</td>
+          <td id="item-total">{{ cart.get_total }}</td>
+        </tr>
+      {% endfor %}
+        <tr>
+          <th scope="row"></th>
+          <td colspan="3"><b>Total(₹)<b></td>
+          <td>{{ order.get_totals |floatformat:1 }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+                <button type="button" style="float: left;padding-right: 0;" onclick="gotohome()" class="btn btn-primary btn-block">Add more Food?</button><br><br>
+              
+            
+                <button type="button" onclick="showbill()" id="submit-items" class="btn btn-success" style="float: right;">Proceed To Checkout</button><br><br><br>
+</div>
+<script>
+
+  function gotohome(){
+    window.location.href="{% url 'home' %}"
+  }
+
+function showbill(){
+  window.location.href="{% url 'checkout' %}";
+}
+</script>
+
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item">Home</li>
+<li class="breadcrumb-item">Cart</li>
+{% endblock %}
+
+
+
+
+
+<script>
+    var roomName = "{{ room_name|escapejs }}";
+
+    var chatSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/chat/' + roomName + '/');
+
+    chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['item-name'];
+        document.querySelector('#item-name').value += (message + '\n');
+    };
+
+    chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['item-quantity'];
+        document.querySelector('#item-quantity').value += (message + '\n');
+    };
+
+    chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['item-price'];
+        document.querySelector('#item-price').value += (message + '\n');
+    };
+
+    chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['item-total'];
+        document.querySelector('#item-total').value += (message + '\n');
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#item-price').focus();
+    document.querySelector('#item-total').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.querySelector('#submit-items').click();
+        }
+    };  
+
+    document.querySelector('#submit-items').onclick = function(e) {
+        var messageInputDom = document.querySelector('#item-total');
+        var message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }));
+
+        messageInputDom.value = '';
+    };
+</script>

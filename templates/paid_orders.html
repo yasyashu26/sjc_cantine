@@ -1,0 +1,110 @@
+{% extends 'order_base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% endblock%}
+
+{% block title %}
+ Orders Received
+{% endblock title %}
+
+
+{% block content %}
+{% if pd_orders %}
+<h1 align="center">ALL PAID ORDERS</h1><br>
+
+<form name="myform" method="POST" action="{% url 'search_po' %}">  
+  {% csrf_token %}
+  <div class="form-group">
+    <div class="row no-gutters">
+        <div class="col-lg-3">
+          <input type="number" class="form-control" name="search" placeholder="Enter Order ID." />
+        </div>
+        <div class="col-lg-2"> 
+          <button class="btn btn-outline-dark" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+        </div>
+    </div><br>
+    
+  </div>
+</form>
+
+<table class="table" color="blue">
+    <thead class="thead-inverse">
+      <tr>
+          <th >#</th>
+          <th >Order Id</th>
+          <th >Summary</th>
+          <th >Total Price(₹)</th>
+          <th> Ordered Date</th>
+          <th colspan > Status</th>
+        </tr>
+      </thead>
+      <div class="height">
+      <tbody>
+        
+  
+        {% for order in pd_orders %}
+        <tr>
+          <th>{{ forloop.counter }}</th>
+          <td>{{ order.pk }}</td>
+          <td>{% for oi in order.orderitems.all %}{{ oi }}<br/>{% endfor %}</td>
+          <td>{{order.total_price}}</td>
+          <td> {{order.created}}</td>
+          <td><a class="btn btn-success" href="{% url 'order_delivered_btn' order.pk %}">DELIVERED</a></td>      
+          
+        </tr>
+      {% endfor %}
+        </tbody>
+      </table>
+
+{% else %}
+<br><br>
+<h1 align="center">You donot have Any Paid orders. RELAX!!!</h1>
+{% endif %}
+
+      {% if pd_orders.has_other_pages %}
+      <nav aria-label="Topics pagination" class="mb-4">
+        <ul class="pagination">
+          {% if pd_orders.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ pd_orders.previous_page_number }}">Previous</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link">Previous</span>
+            </li>
+          {% endif %}
+  
+          {% for page_num in pd_orders.paginator.page_range %}
+            {% if pd_orders.number == page_num %}
+              <li class="page-item active">
+                <span class="page-link">
+                  {{ page_num }}
+                  <span class="sr-only">(current)</span>
+                </span>
+              </li>
+            {% else %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+  
+          {% if pd_orders.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ pd_orders.next_page_number }}">Next</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link">Next</span>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+
+    </div>
+
+
+{% endblock %}

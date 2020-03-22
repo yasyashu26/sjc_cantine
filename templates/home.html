@@ -1,0 +1,109 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block stylesheet %}
+
+<!--link rel="stylesheet" href="{% static 'css/home.css' %}"-->
+{% endblock  %}
+
+{% block content %}
+
+
+<div class="container">
+ 
+  <div class="description">
+    
+    <h1>    Hello ,Welcome To Cantine Restaurent </h1> 
+     <p>One of the best taste ever found...
+           Accept what people offer, Drink their Milkshake, take their love....
+           what came first,the chicken or the egg? dont care,eat both...
+     </p>   
+     
+     <button class="btn btn-outline-secondary btn-lg" data-toggle="collapse" data-parent="#accordion" href="#collapse2">See more</button>   
+   
+  </div> <br>  
+  <div class="row" >
+    {% for category in categories %}
+  
+  <div class="col-lg-3 col-md-4 col-sm-6 col-12" style="padding-top: 20px;padding-bottom: 20px;">
+    <div class="hovereffect">
+        <img  class="img-responsive" src="{{ category.picture.url }}" alt="" width="100%" height="100%"> 
+        <div class="overlay">
+           <h2>{{category.title}}</h2>
+           <a class="info" href="{% url 'products' category.pk %}">click Here</a>
+        </div>
+    
+    </div>
+  </div>
+  
+  
+    {% endfor %}
+  </div>
+<br><br>
+<div id="collapse2" class="panel-collapse collapse">
+
+  <div class="description">
+    
+    <!--h1>    Infrastructure </h1--> 
+     <!--p>Hotel managers are responsible for managing employees and for planning, marketing , coordinating 
+       and administering hotel services such as catering and accommodation facilities. 
+       Rapid career progression into higher managerial roles is possible both within the UK and overseas.
+     </p-->   
+      <br>
+      <h1>    About </h1> 
+      <div class="aboutimage" id="coll">
+        <img src="\static\img\aboutus2.png" class="img-responsive" width="550px" height="300px">
+      </div>
+     <p>Hotel managers are responsible for managing employees and for planning, marketing , coordinating 
+       and administering hotel services such as catering and accommodation facilities. 
+       Rapid career progression into higher managerial roles is possible both within the UK and overseas.
+     </p>  
+     <p>  Cantine was an initiative started by 3 Students to overcome the problems faced while buying food from a canteen present in an
+       organization. The main goal was to design a web-application that helps the people of the organization to order food and collect it with ease.
+     </p>
+    </div>
+     <br><br>
+     <div class="description1">
+     <h1>    contact us </h1> <br><br><br>
+     <div class="aboutimage1">
+      <img src="\static\img\contactus11.jpg" class="img-responsive" width="550px" height="300px">
+    </div>
+     <p>Hotel managers are responsible for managing employees and for planning, marketing , coordinating 
+       and administering hotel services such as catering and accommodation facilities. 
+       Rapid career progression into higher managerial roles is possible both within the UK and overseas.
+     </p>  
+   <p>  You can get in touch with us by contacting us through <a href="#">cantine@gmail.com</a> Mail or Whatsapp us at <a>6362110078</a>.
+  Feel free to let us know about our pros and cons. Your feedback is very important to us, as we can get to know how to help you better.
+   </p>
+  
+  </div>
+<br>
+ 
+</div>
+</div>
+  <!--div class="contact-form" id="contact">
+    <div class="container">
+     <form>
+      <div class="row">
+       <div class="col-lg-4 col-md-4 col-sm-12">
+         <h1>Get in Touch</h1> 
+       </div>
+       <div class="col-lg-8 col-md-8 col-sm-12 right">
+          <div class="form-group">
+            <input type="text" class="form-control form-control-lg" placeholder="Your Name" name="">
+          </div>
+          <div class="form-group">
+            <input type="email" class="form-control form-control-lg" placeholder="YourEmail@email.com" name="email">
+          </div>
+          <div class="form-group">
+            <textarea class="form-control form-control-lg">
+             
+            </textarea>
+          </div>
+          <input type="submit" class="btn btn-secondary btn-block" value="Send" name="">
+       </div>
+      </div>
+     </form>
+    </div>
+   </div-->
+ 
+  {% endblock%}

@@ -1,0 +1,47 @@
+{% extends 'base.html'%}
+{% block content %}
+<div class="container">
+    <div class="row">
+      {% for product in products %}
+
+
+
+      <div class="col-md-4 col-sm-12 col-lg-3 mb-2">
+      {% if product.available == True %}
+      
+              <div class="card" style='width:100%; height:100%;'>
+                <img src="{{ product.mainimage.url }}" style="width:100%;height: 200px;" class="card-img-top" alt="{{ product.name }}">
+                      <div class="card-body">
+                        <h5 class="card-title"> {{ product.name }}</h5>
+                        <p class="cart-text"><b>₹ {{ product.price }}</b></p>
+                        <p class="card-text">{{ product.preview_text }}</p>
+                      </div>
+                  <div class='card-footer text-center'>
+                  <a href="{% url 'add-cart' pk=product.pk %}" class="btn btn-primary btn-block">Add to Cart</a>
+                  </div>
+               </div>
+     
+        {% else %}
+         <div class="card" style="width:100%; height:100%;background-color: rgba(245, 245, 245, 0.932);">
+          <img src="{{ product.mainimage.url }}" style="width:100%;height: 200px;" class="card-img-top" alt="{{ product.name }}">
+                <div class="card-body">
+                  <h5 class="card-title"> {{ product.name }}<br><h6>*Currently Unavailable</h6></h5>
+                  <p class="cart-text"><b>₹ {{ product.price }}</b></p>
+                  <p class="card-text">{{ product.preview_text }}</p>
+                </div>
+            <div class='card-footer text-center'>
+            <a href="{% url 'add-cart' pk=product.pk %}" class="btn btn-primary btn-block disabled">Add to Cart</a>
+            </div>
+         </div>        
+        {% endif %}
+      </div>
+      {% endfor %}
+  </div>
+  </div>
+
+
+{% endblock%}
+{% block breadcrumb %}
+<li class="breadcrumb-item">Home</li>
+<li class="breadcrumb-item">{{ category_name }}</li>
+{% endblock %}

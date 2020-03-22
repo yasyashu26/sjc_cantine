@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title%}Bill{% endblock %}
+{% block content %}
+  <div  class="container">
+  <div class="row justify-content-center ">
+        
+
+         
+          {% if orders %}
+           {% for order in orders%}
+           <div class="col-md-3 col-lg-3"></div>
+
+           <div class="col-lg-5 col-md-5 justify-content-center">
+
+           <div class="card">
+           <div class="card-body" >
+           <h2 class="text-center" style="font-family:'Times New Roman', Times, serif;">
+            Cantine</h2>
+          <h3 class="text-center">#Order:<font>{{ order.pk}}</font></h3>
+          <p class="text-center">--------------------------------------------</p>
+          {% if order.paid == 'yes' %}
+          <p class="text-center" style="color: green;">Order Paid <i class="fa fa-check" aria-hidden="true"></i></p>
+          {% endif %}
+          <table  class="table">
+            <thead>
+              <tr>
+                <th colspan="2">Summary:</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>                    
+                    <td colspan="2" align="left">{% for oi in order.orderitems.all %}{{ oi }}<br/>
+                    {% endfor %}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Total</b></td>
+                    <td colspan="2" align="right" style="padding-right: 20px;"><b>₹ {{ order.total_price }}</b></td>
+                  </tr>
+            </tbody>
+          </table>
+      </div>
+
+            <div class="card-footer text-center">
+            We are always at Your Service! Happy to See You Again
+            </div>
+      </div><br>
+
+    </div>
+    <div class="col-lg-3 col-md-3"></div>
+
+           {% endfor%}
+          </div>
+          </div>
+          {% else %}
+          <div class="container">
+            <br>
+          <h1 align="center" style="color:red;"> You donot have an Active order</h1>
+          {% endif %}
+        </div>
+       
+      
+    </div>
+  </div>
+  <br><br>
+{% endblock %}

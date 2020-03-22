@@ -1,0 +1,176 @@
+{% extends 'order_base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% endblock%}
+
+{% block title %}
+ Orders Received
+{% endblock title %}
+
+
+{% block content %}
+{% if aw_orders%}
+<script >
+  setInterval(function(){
+     window.location.reload(1);
+  }, 2000);
+  </script>
+
+<h1 align="center" color="red">ORDERS RECEIVED</h1>
+
+<form name="myform" method="POST" action="{% url 'search' %}">  
+  {% csrf_token %}
+  <div class="form-group">
+    <div class="row no-gutters">
+        <div class="col-lg-3">
+          <input type="number" class="form-control" name="search" placeholder="Enter Order ID." />
+        </div>
+        <div class="col-lg-2"> 
+          <button class="btn btn-outline-dark" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+        </div>
+    </div><br>
+    
+  </div>
+</form>
+
+<table class="table" color="blue">
+    <thead class="thead-inverse">
+      <tr>
+          <th >#</th>
+          <th >Order Id</th>
+          <th >Summary</th>
+          <th >Total Price(₹)</th>
+          <th> Ordered Date</th>
+          <th colspan=2 > Status</th>
+        </tr>
+      </thead>
+      <div class="height">
+      <tbody>
+        
+  
+        {% for order in aw_orders %}
+        <tr>
+          <th>{{ forloop.counter }}</th>
+          <td>{{ order.pk }}</td>
+          <td id="item-name">{% for oi in order.orderitems.all %}{{ oi }}<br/>{% endfor %}</td>
+          <td id="item-price">{{order.total_price}}</td>
+          <td> {{order.created}}</td>
+          <td><a class="btn btn-success" href="{% url 'order_paid_btn' order.pk %}">PAID</a></td>
+          <td><a href="{% url 'order_cancelled_btn' order.pk %}" class="btn btn-danger" >CANCELLED</a></td>
+          
+         
+        </tr>
+      {% endfor %}
+        </tbody>
+      </table>
+
+
+      {% if aw_orders.has_other_pages %}
+    <nav aria-label="Topics pagination" class="mb-4">
+      <ul class="pagination">
+        {% if aw_orders.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ aw_orders.previous_page_number }}">Previous</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">Previous</span>
+          </li>
+        {% endif %}
+
+        {% for page_num in aw_orders.paginator.page_range %}
+          {% if aw_orders.number == page_num %}
+            <li class="page-item active">
+              <span class="page-link">
+                {{ page_num }}
+                <span class="sr-only">(current)</span>
+              </span>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+
+        {% if aw_orders.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ aw_orders.next_page_number }}">Next</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">Next</span>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+
+    </div>
+{% else %}
+<br>
+<br>
+<h1 align="center">You donot have Any awaited orders. RELAX!!!.</h1>
+
+{% endif %}
+{% endblock %}
+
+<script>
+  var roomName = "{{ room_name|escapejs }}";
+
+  var chatSocket = new WebSocket(
+      'ws://' + window.location.host +
+      '/ws/chat/' + roomName + '/');
+
+  chatSocket.onmessage = function(e) {
+      var data = JSON.parse(e.data);
+      var message = data['item-name'];
+      document.querySelector('#item-name').value += (message + '\n');
+  };
+
+  chatSocket.onmessage = function(e) {
+      var data = JSON.parse(e.data);
+      var message = data['item-quantity'];
+      document.querySelector('#item-quantity').value += (message + '\n');
+  };
+
+  chatSocket.onmessage = function(e) {
+      var data = JSON.parse(e.data);
+      var message = data['item-price'];
+      document.querySelector('#item-price').value += (message + '\n');
+  };
+
+  chatSocket.onmessage = function(e) {
+      var data = JSON.parse(e.data);
+      var message = data['item-total'];
+      document.querySelector('#item-total').value += (message + '\n');
+  };
+
+  chatSocket.onclose = function(e) {
+      console.error('Chat socket closed unexpectedly');
+  };
+
+  document.querySelector('#item-price').focus();
+  document.querySelector('#item-total').onkeyup = function(e) {
+      if (e.keyCode === 13) {  // enter, return
+          document.querySelector('#submit-items').click();
+      }
+  };  
+
+  document.querySelector('#submit-items').onclick = function(e) {
+      var messageInputDom = document.querySelector('#item-total');
+      var message = messageInputDom.value;
+      chatSocket.send(JSON.stringify({
+          'message': message
+      }));
+
+      messageInputDom.value = '';
+  };
+</script>
+
+
+
+
+ 

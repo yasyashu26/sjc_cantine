@@ -1,0 +1,68 @@
+{% extends 'inventory_base.html' %}
+{% block title%}
+All-Products
+{% endblock%}
+
+{% block content %}
+<div class="container">
+ {% if items %}
+  <div class="table-responsive">
+    <h1 align="center">All Food Items</h1><br>
+    <table class="table table-hover" style="margin: auto;">
+      <thead>
+        <tr>
+          <th >Product <br> Id</th>
+          <th >Product <br> Name</th>
+          <th >Product <br> Price</th>
+          <th >Product <br> Image</th>
+          <th >Product<br>Category</th>
+          <th >Preview <br> Text</th>
+          <th >Product <br> Status</th>
+          <th  colspan="2" >Edit/<br>Delete</th>         
+        </tr>
+      </thead>
+      <tbody>
+        
+  
+        {% for item in items %}
+           <tr>
+             <td>{{ item.pk }}</td>
+             <td>{{ item.name }}</td>
+             <td>{{ item.price }}</td>
+             <td><img src="{{ item.mainimage.url }}" style="border: 2px solid black;border-radius: 5%;width:150px;height:130px;" class="alt="{{ item.name }}"></td>
+             <td>{{ item.category }}</td>
+             <td><p style="text-align: justify;">{{ item.preview_text }}</p></td>             
+             <td>
+               {% if item.available == True %}
+                    <a href="{% url 'not_available' item.pk %}"><button type="button" class="btn-success btn-sm">Available</button></a>
+               {% else %}
+                    <a href="{% url 'available' item.pk %}"><button type="button" class="btn-danger btn-sm">Not Available</button></a>
+               {% endif %}            
+             </td>
+
+             <td>
+               <a href="{% url 'edit_item' item.pk %}"><button type="button" class="btn-primary btn-sm">Edit</button></a>
+             </td>
+             <td>
+              <a href="{% url 'delete_items' item.pk %}"><button type="button" class="btn-danger btn-sm">Delete</button></a>
+             </td>
+            
+           </tr>
+        {% endfor %}
+      </tbody>
+    </table><br><br>
+  </div>
+ {% else %}
+    <h1>No items in inventory!<a href="{% url 'add_items' %}">Add Items...</a></h1>
+</div>
+ {% endif %}
+ 
+</div>
+
+
+{% endblock content %}
+
+
+
+
+

@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title%}Past Orders
+{% endblock%}
+{% block content %}
+<div class="container">
+{% if orders %}
+  <div class="table-responsive">
+    <table  class="table table-hover">
+      <thead>
+        <tr>
+          <th >#</th>
+          <th >Order Id</th>
+          <th >Summary</th>
+          <th> Ordered Date</th>
+          <th >Total Price(₹)</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+  
+        {% for order in orders %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ order.pk }}</td>
+          <td align="left">{% for oi in order.orderitems.all %}{{ oi }}<br/>{% endfor %}</td>
+          <td> {{order.created}}</td>
+          <td>{{order.total_price}}</td>
+         
+        </tr>
+      {% endfor %}
+        </tbody>
+      </table>
+
+      
+      {% if orders.has_other_pages %}
+    <nav aria-label="Topics pagination" class="mb-4">
+      <ul class="pagination">
+        {% if orders.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ orders.previous_page_number }}">Previous</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">Previous</span>
+          </li>
+        {% endif %}
+
+        {% for page_num in orders.paginator.page_range %}
+          {% if orders.number == page_num %}
+            <li class="page-item active">
+              <span class="page-link">
+                {{ page_num }}
+                <span class="sr-only">(current)</span>
+              </span>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+
+        {% if orders.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ orders.next_page_number }}">Next</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">Next</span>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+    </div>
+</div>
+    {% else %}
+    <div>
+    <h1>You Dont have any previous Orders!</h1>
+    </div>
+    {% endif %}
+{% endblock  %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item">Home</li>
+<li class="breadcrumb-item">Past Orders</li>
+{% endblock %}
